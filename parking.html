@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Parking Map — ParkEase</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-logo"><span class="logo-p">P</span>arkEase</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="parking.html" class="active">Live Parking</a></li>
+      <li><a href="book.html">Book a Slot</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="book.html" class="btn-nav">Reserve Now</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="section-label">Live · Updated 28 seconds ago</div>
+  <h1>Parking <em>Map</em></h1>
+  <p>Real-time slot availability across all 6 partner malls. Click any available slot to pre-book.</p>
+</div>
+
+<div style="max-width:1180px;margin:0 auto;padding:0 24px 100px;">
+
+  <!-- Mall Selector -->
+  <div style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+    <button class="floor-tab active" onclick="selectMall(this,'ea')">Express Avenue</button>
+    <button class="floor-tab" onclick="selectMall(this,'pm')">Phoenix MarketCity</button>
+    <button class="floor-tab" onclick="selectMall(this,'vr')">VR Chennai</button>
+    <button class="floor-tab" onclick="selectMall(this,'fv')">Forum Vijaya</button>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="stats-strip" style="margin-bottom:28px;">
+    <div class="stats-strip-item">
+      <span class="strip-num" id="totalFree">34</span>
+      <div class="strip-label">Available Now</div>
+    </div>
+    <div class="stats-strip-item">
+      <span class="strip-num" id="totalOccupied" style="color:#ff5555;">46</span>
+      <div class="strip-label">Occupied</div>
+    </div>
+    <div class="stats-strip-item">
+      <span class="strip-num" id="evFree" style="color:#3ecfcf;">6</span>
+      <div class="strip-label">EV Slots Free</div>
+    </div>
+    <div class="stats-strip-item">
+      <span class="strip-num" id="reserved" style="color:#4f8ef7;">4</span>
+      <div class="strip-label">Pre-booked</div>
+    </div>
+  </div>
+
+  <!-- Floor tabs -->
+  <div class="floor-tabs" id="floorTabs">
+    <button class="floor-tab active" onclick="switchFloor(this,0)">Basement 1</button>
+    <button class="floor-tab" onclick="switchFloor(this,1)">Basement 2</button>
+    <button class="floor-tab" onclick="switchFloor(this,2)">Level 1</button>
+    <button class="floor-tab" onclick="switchFloor(this,3)">Level 2</button>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:24px;margin-bottom:16px;flex-wrap:wrap;">
+    <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9a9b9e;"><i class="dot green" style="width:10px;height:10px;background:#5adb8a;border-radius:50%;display:inline-block;"></i>Available</span>
+    <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9a9b9e;"><i style="width:10px;height:10px;background:#ff5555;border-radius:50%;display:inline-block;"></i>Occupied</span>
+    <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9a9b9e;"><i style="width:10px;height:10px;background:#3ecfcf;border-radius:50%;display:inline-block;"></i>EV Slot</span>
+    <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9a9b9e;"><i style="width:10px;height:10px;background:#4f8ef7;border-radius:50%;display:inline-block;"></i>Pre-booked</span>
+  </div>
+
+  <!-- Parking Map -->
+  <div class="parking-map-grid" id="parkingMap"></div>
+
+  <!-- Sidebar info -->
+  <div id="slotInfo" style="display:none;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;margin-top:20px;">
+    <h3 id="slotTitle" style="font-size:20px;font-weight:700;margin-bottom:8px;"></h3>
+    <p id="slotMeta" style="color:#9a9b9e;font-size:14px;margin-bottom:20px;"></p>
+    <a href="book.html" class="btn-primary" style="display:inline-flex;">Book This Slot →</a>
+  </div>
+
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+// Floor data templates
+const floors = [
+  { name: 'Basement 1', rows: 3, cols: 10, ev: [2,5,12], occupied: [1,3,6,9,11,14,17,19,22,25] },
+  { name: 'Basement 2', rows: 3, cols: 10, ev: [8,28], occupied: [0,4,7,10,15,18,20,23,26] },
+  { name: 'Level 1', rows: 2, cols: 10, ev: [3,17], occupied: [2,5,8,11,13,16] },
+  { name: 'Level 2', rows: 2, cols: 10, ev: [1,9], occupied: [0,3,6,14,18] }
+];
+
+const reserved = [8, 21, 33];
+let currentFloor = 0;
+
+function renderFloor(idx) {
+  const floor = floors[idx];
+  const map = document.getElementById('parkingMap');
+  const total = floor.rows * floor.cols;
+  map.innerHTML = '';
+  
+  let freeCount = 0, occupCount = 0, evCount = 0, resCount = 0;
+  
+  for (let i = 0; i < total; i++) {
+    const div = document.createElement('div');
+    div.className = 'map-slot';
+    const slotId = String.fromCharCode(65 + Math.floor(i / floor.cols)) + '-' + String(i % floor.cols + 1).padStart(2,'0');
+    div.textContent = slotId;
+    div.dataset.id = slotId;
+    
+    if (reserved.includes(i)) {
+      div.classList.add('reserved');
+      div.title = slotId + ' — Pre-booked';
+      resCount++;
+    } else if (floor.occupied.includes(i)) {
+      div.classList.add('occup');
+      div.title = slotId + ' — Occupied';
+      occupCount++;
+    } else if (floor.ev.includes(i)) {
+      div.classList.add('evslot');
+      div.title = slotId + ' — EV Slot (Available)';
+      div.addEventListener('click', () => showSlotInfo(slotId, 'EV Charging Slot', 'Includes 7.2 kW charging. ₹80/hr.'));
+      evCount++;
+      freeCount++;
+    } else {
+      div.classList.add('avail');
+      div.title = slotId + ' — Available';
+      div.addEventListener('click', () => showSlotInfo(slotId, 'Standard Slot', '4-wheeler. ₹50/hr.'));
+      freeCount++;
+    }
+    map.appendChild(div);
+  }
+  
+  document.getElementById('totalFree').textContent = freeCount;
+  document.getElementById('totalOccupied').textContent = occupCount;
+  document.getElementById('evFree').textContent = evCount;
+  document.getElementById('reserved').textContent = resCount;
+}
+
+function showSlotInfo(id, type, meta) {
+  document.getElementById('slotInfo').style.display = 'block';
+  document.getElementById('slotTitle').textContent = 'Slot ' + id + ' — ' + type;
+  document.getElementById('slotMeta').textContent = meta + ' Click below to pre-book and guarantee your spot.';
+  document.getElementById('slotInfo').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function switchFloor(btn, idx) {
+  document.querySelectorAll('#floorTabs .floor-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFloor = idx;
+  document.getElementById('slotInfo').style.display = 'none';
+  renderFloor(idx);
+}
+
+function selectMall(btn, mallId) {
+  document.querySelectorAll('.floor-tab').forEach(b => {
+    if (!b.closest('#floorTabs')) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  renderFloor(currentFloor);
+  if (window.showToast) showToast('🏬', 'Mall Updated', 'Showing live data for selected mall');
+}
+
+// Auto-refresh simulation
+setInterval(() => {
+  const badge = document.querySelector('.section-label');
+  if (badge) {
+    let sec = 30;
+    const t = setInterval(() => {
+      sec--;
+      badge.textContent = `Live · Updated ${sec} seconds ago`;
+      if (sec <= 0) { sec = 30; clearInterval(t); }
+    }, 1000);
+  }
+}, 30000);
+
+renderFloor(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Parking Slot — ParkEase</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-logo"><span class="logo-p">P</span>arkEase</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="parking.html">Live Parking</a></li>
+      <li><a href="book.html" class="active">Book a Slot</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="book.html" class="btn-nav">Reserve Now</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="section-label">Quick Booking</div>
+  <h1>Reserve Your <em>Slot</em></h1>
+  <p>Pre-book in 60 seconds. Your slot is held for 15 minutes after your booking window opens.</p>
+</div>
+
+<div class="form-section">
+  <div class="form-grid">
+
+    <!-- BOOKING FORM -->
+    <div class="form-card" id="bookingForm">
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:24px;letter-spacing:-0.5px;">Booking Details</h2>
+
+      <div class="form-group">
+        <label>Select Mall</label>
+        <select id="mallSelect" onchange="updateSlots()">
+          <option value="">— Choose a mall —</option>
+          <option value="ea">Express Avenue, Royapettah</option>
+          <option value="pm">Phoenix MarketCity, Velachery</option>
+          <option value="vr">VR Chennai, Anna Nagar</option>
+          <option value="fv">Forum Vijaya, Vadapalani</option>
+          <option value="sp">Spencer Plaza, Anna Salai</option>
+          <option value="as">Ampa Skywalk, Aminjikarai</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="dateInput" />
+        </div>
+        <div class="form-group">
+          <label>Entry Time</label>
+          <input type="time" id="timeInput" value="10:00" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Duration</label>
+        <select id="durationSelect" onchange="updatePrice()">
+          <option value="1">1 hour</option>
+          <option value="2" selected>2 hours</option>
+          <option value="3">3 hours</option>
+          <option value="4">4 hours</option>
+          <option value="6">6 hours</option>
+          <option value="8">Full day (8 hrs)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Vehicle Type</label>
+        <select id="vehicleType" onchange="updatePrice()">
+          <option value="2w">Two-Wheeler (₹20/hr)</option>
+          <option value="4w" selected>Four-Wheeler (₹50/hr)</option>
+          <option value="ev">EV + Charging (₹80/hr)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Vehicle Number</label>
+        <input type="text" id="vehicleNum" placeholder="TN 01 AB 1234" maxlength="12" style="text-transform:uppercase;" />
+      </div>
+
+      <div class="form-group">
+        <label>Floor Preference</label>
+        <select id="floorPref">
+          <option value="any">Any (system assigns best)</option>
+          <option value="b1">Basement 1</option>
+          <option value="b2">Basement 2</option>
+          <option value="l1">Level 1</option>
+          <option value="l2">Level 2</option>
+        </select>
+      </div>
+
+      <!-- Price Summary -->
+      <div id="priceSummary" style="background:var(--surface2);border-radius:12px;padding:20px;margin-bottom:20px;display:none;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#9a9b9e;font-size:14px;">Base fare</span>
+          <span id="baseFare" style="font-size:14px;font-weight:600;"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#9a9b9e;font-size:14px;">Platform fee</span>
+          <span style="font-size:14px;font-weight:600;">₹5</span>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;margin-top:4px;display:flex;justify-content:space-between;">
+          <span style="font-weight:700;font-size:15px;">Total</span>
+          <span id="totalFare" style="font-weight:800;font-size:18px;color:#c8f135;"></span>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="submitBooking()">🅿 Confirm Booking</button>
+    </div>
+
+    <!-- CONFIRMATION PANEL -->
+    <div id="confirmationPanel" style="display:none;">
+      <div class="form-card" style="text-align:center;padding:48px 36px;">
+        <div style="font-size:64px;margin-bottom:20px;">✅</div>
+        <h2 style="font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:12px;">Booking Confirmed!</h2>
+        <p style="color:#9a9b9e;font-size:15px;margin-bottom:32px;">Your slot is reserved. Show this QR code at the boom barrier.</p>
+
+        <!-- QR Code placeholder -->
+        <div style="width:180px;height:180px;background:white;border-radius:12px;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;padding:12px;">
+          <svg width="156" height="156" viewBox="0 0 156 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Simulated QR code pattern -->
+            <rect width="156" height="156" fill="white"/>
+            <g fill="#080a00">
+              <!-- Top-left finder -->
+              <rect x="10" y="10" width="42" height="42" rx="4"/>
+              <rect x="18" y="18" width="26" height="26" rx="2" fill="white"/>
+              <rect x="24" y="24" width="14" height="14" rx="1"/>
+              <!-- Top-right finder -->
+              <rect x="104" y="10" width="42" height="42" rx="4"/>
+              <rect x="112" y="18" width="26" height="26" rx="2" fill="white"/>
+              <rect x="118" y="24" width="14" height="14" rx="1"/>
+              <!-- Bottom-left finder -->
+              <rect x="10" y="104" width="42" height="42" rx="4"/>
+              <rect x="18" y="112" width="26" height="26" rx="2" fill="white"/>
+              <rect x="24" y="118" width="14" height="14" rx="1"/>
+              <!-- Data modules (simplified) -->
+              <rect x="62" y="10" width="8" height="8"/>
+              <rect x="72" y="10" width="8" height="8"/>
+              <rect x="62" y="22" width="8" height="8"/>
+              <rect x="82" y="10" width="8" height="8"/>
+              <rect x="82" y="22" width="8" height="8"/>
+              <rect x="72" y="34" width="8" height="8"/>
+              <rect x="10" y="62" width="8" height="8"/>
+              <rect x="22" y="62" width="8" height="8"/>
+              <rect x="34" y="62" width="8" height="8"/>
+              <rect x="10" y="74" width="8" height="8"/>
+              <rect x="34" y="74" width="8" height="8"/>
+              <rect x="22" y="86" width="8" height="8"/>
+              <rect x="62" y="62" width="8" height="8"/>
+              <rect x="74" y="62" width="8" height="8"/>
+              <rect x="86" y="62" width="8" height="8"/>
+              <rect x="62" y="74" width="8" height="8"/>
+              <rect x="74" y="74" width="8" height="8"/>
+              <rect x="86" y="74" width="8" height="8"/>
+              <rect x="62" y="86" width="8" height="8"/>
+              <rect x="86" y="86" width="8" height="8"/>
+              <rect x="62" y="98" width="8" height="8"/>
+              <rect x="74" y="98" width="8" height="8"/>
+              <rect x="86" y="98" width="8" height="8"/>
+              <rect x="98" y="62" width="8" height="8"/>
+              <rect x="110" y="62" width="8" height="8"/>
+              <rect x="122" y="62" width="8" height="8"/>
+              <rect x="134" y="62" width="8" height="8"/>
+              <rect x="98" y="74" width="8" height="8"/>
+              <rect x="122" y="74" width="8" height="8"/>
+              <rect x="110" y="86" width="8" height="8"/>
+              <rect x="134" y="86" width="8" height="8"/>
+              <rect x="98" y="98" width="8" height="8"/>
+              <rect x="110" y="98" width="8" height="8"/>
+              <rect x="62" y="110" width="8" height="8"/>
+              <rect x="86" y="110" width="8" height="8"/>
+              <rect x="74" y="122" width="8" height="8"/>
+              <rect x="98" y="110" width="8" height="8"/>
+              <rect x="122" y="110" width="8" height="8"/>
+              <rect x="110" y="122" width="8" height="8"/>
+              <rect x="134" y="122" width="8" height="8"/>
+              <rect x="98" y="134" width="8" height="8"/>
+              <rect x="122" y="134" width="8" height="8"/>
+              <rect x="62" y="134" width="8" height="8"/>
+            </g>
+          </svg>
+        </div>
+
+        <div id="bookingDetails" style="text-align:left;background:var(--surface2);border-radius:12px;padding:20px;margin-bottom:24px;"></div>
+
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button onclick="resetForm()" style="background:var(--surface2);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:12px 24px;color:#f0f0f0;font-size:14px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;">Book Another</button>
+          <a href="parking.html" class="btn-primary" style="font-size:14px;padding:12px 24px;">View Map →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info panel (right side, visible before confirm) -->
+    <div id="infoPanel">
+      <div style="margin-bottom:24px;">
+        <div class="section-label">How booking works</div>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:rgba(200,241,53,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#c8f135;font-weight:800;font-size:13px;">1</div>
+            <div><strong style="font-size:14px;display:block;margin-bottom:4px;">Fill the form</strong><span style="color:#9a9b9e;font-size:13px;">Choose your mall, date, time, and vehicle type.</span></div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:rgba(200,241,53,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#c8f135;font-weight:800;font-size:13px;">2</div>
+            <div><strong style="font-size:14px;display:block;margin-bottom:4px;">Get your QR code</strong><span style="color:#9a9b9e;font-size:13px;">A QR code is issued instantly. Save it or screenshot it.</span></div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:rgba(200,241,53,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#c8f135;font-weight:800;font-size:13px;">3</div>
+            <div><strong style="font-size:14px;display:block;margin-bottom:4px;">Scan & drive in</strong><span style="color:#9a9b9e;font-size:13px;">The boom barrier opens automatically. Navigate to your slot.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(200,241,53,0.2);border-radius:16px;padding:24px;">
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#c8f135;margin-bottom:16px;">⚡ First booking free</div>
+        <p style="color:#9a9b9e;font-size:14px;line-height:1.7;">Your first booking is on us — platform fee waived, no minimum duration. Just arrive and scan.</p>
+      </div>
+
+      <div style="margin-top:20px;background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px;">📋 Cancellation Policy</div>
+        <p style="color:#9a9b9e;font-size:13px;line-height:1.7;">Cancel up to 30 minutes before your slot for a full refund. No-shows are charged 50% of the booking amount.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="justify-content:center;">
+      <span>© 2025 ParkEase. <a href="../index.html" style="color:#c8f135;">← Back to Home</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+// Set default date to today
+const today = new Date();
+document.getElementById('dateInput').value = today.toISOString().split('T')[0];
+document.getElementById('dateInput').min = today.toISOString().split('T')[0];
+
+const rates = { '2w': 20, '4w': 50, 'ev': 80 };
+
+function updatePrice() {
+  const mall = document.getElementById('mallSelect').value;
+  if (!mall) return;
+  const vehicle = document.getElementById('vehicleType').value;
+  const duration = parseInt(document.getElementById('durationSelect').value);
+  const rate = rates[vehicle];
+  const base = rate * duration;
+  const total = base + 5;
+  document.getElementById('priceSummary').style.display = 'block';
+  document.getElementById('baseFare').textContent = '₹' + base;
+  document.getElementById('totalFare').textContent = '₹' + total;
+}
+
+function updateSlots() {
+  updatePrice();
+}
+
+function submitBooking() {
+  const mall = document.getElementById('mallSelect').value;
+  const date = document.getElementById('dateInput').value;
+  const time = document.getElementById('timeInput').value;
+  const vehicle = document.getElementById('vehicleNum').value.trim();
+  const vType = document.getElementById('vehicleType').value;
+  const duration = document.getElementById('durationSelect').value;
+  const floor = document.getElementById('floorPref').value;
+
+  if (!mall) { alert('Please select a mall.'); return; }
+  if (!date) { alert('Please select a date.'); return; }
+  if (!vehicle) { alert('Please enter your vehicle number.'); return; }
+
+  const mallNames = {
+    'ea':'Express Avenue','pm':'Phoenix MarketCity','vr':'VR Chennai',
+    'fv':'Forum Vijaya','sp':'Spencer Plaza','as':'Ampa Skywalk'
+  };
+  const vNames = { '2w': 'Two-Wheeler', '4w': 'Four-Wheeler', 'ev': 'EV + Charging' };
+  const floorNames = { 'any':'Auto-assigned','b1':'Basement 1','b2':'Basement 2','l1':'Level 1','l2':'Level 2' };
+
+  const slots = ['A-04','B-07','C-02','A-11','B-03'];
+  const assignedSlot = slots[Math.floor(Math.random() * slots.length)];
+  const bookingId = 'PE' + Math.random().toString(36).substr(2,7).toUpperCase();
+
+  const rate = rates[vType];
+  const total = (rate * parseInt(duration)) + 5;
+
+  document.getElementById('bookingDetails').innerHTML = `
+    <div style="display:grid;gap:12px;">
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Booking ID</span><span style="font-weight:700;font-size:13px;color:#c8f135;">${bookingId}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Mall</span><span style="font-weight:600;font-size:13px;">${mallNames[mall]}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Assigned Slot</span><span style="font-weight:700;font-size:13px;">${assignedSlot}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Date & Time</span><span style="font-weight:600;font-size:13px;">${date} at ${time}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Vehicle</span><span style="font-weight:600;font-size:13px;">${vehicle.toUpperCase()} (${vNames[vType]})</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:#9a9b9e;font-size:13px;">Duration</span><span style="font-weight:600;font-size:13px;">${duration} hr${duration>1?'s':''}</span></div>
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;display:flex;justify-content:space-between;"><span style="font-weight:700;">Total Paid</span><span style="font-weight:800;color:#c8f135;font-size:16px;">₹${total}</span></div>
+    </div>
+  `;
+
+  document.getElementById('bookingForm').style.display = 'none';
+  document.getElementById('infoPanel').style.display = 'none';
+  document.getElementById('confirmationPanel').style.display = 'block';
+  document.getElementById('confirmationPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('bookingForm').style.display = 'block';
+  document.getElementById('infoPanel').style.display = 'block';
+  document.getElementById('confirmationPanel').style.display = 'none';
+  document.getElementById('mallSelect').value = '';
+  document.getElementById('vehicleNum').value = '';
+  document.getElementById('priceSummary').style.display = 'none';
+}
+</script>
+</body>
+</html>
