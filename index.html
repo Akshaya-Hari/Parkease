@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkEase — Smart Mall Parking System</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🅿</text></svg>">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-p">P</span>arkEase
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="pages/parking.html">Live Parking</a></li>
+      <li><a href="pages/book.html">Book a Slot</a></li>
+      <li><a href="pages/services.html">Services</a></li>
+      <li><a href="pages/about.html">About</a></li>
+    </ul>
+    <a href="pages/book.html" class="btn-nav">Reserve Now</a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="grid-overlay"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <span>Live · 847 spots available now</span>
+    </div>
+    <h1 class="hero-title">
+      Park Smarter,<br>
+      <em>Not Harder</em>
+    </h1>
+    <p class="hero-sub">Real-time parking availability, pre-booking, and seamless entry for Chennai's premier malls. No more circling floors for 20 minutes.</p>
+    <div class="hero-actions">
+      <a href="pages/book.html" class="btn-primary">Book a Slot <span class="arrow">→</span></a>
+      <a href="pages/parking.html" class="btn-ghost">View Live Map</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Malls</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">2,400+</span>
+        <span class="stat-label">Parking Slots</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Uptime</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="parking-card">
+      <div class="card-header">
+        <span class="mall-name">Express Avenue</span>
+        <span class="floor-tag">Floor B2</span>
+      </div>
+      <div class="slot-grid">
+        <div class="slot available" title="A-01"></div>
+        <div class="slot available" title="A-02"></div>
+        <div class="slot occupied" title="A-03"></div>
+        <div class="slot available" title="A-04"></div>
+        <div class="slot occupied" title="A-05"></div>
+        <div class="slot occupied" title="A-06"></div>
+        <div class="slot available" title="A-07"></div>
+        <div class="slot available selected" title="A-08"></div>
+        <div class="slot occupied" title="A-09"></div>
+        <div class="slot available" title="A-10"></div>
+        <div class="slot occupied" title="A-11"></div>
+        <div class="slot available" title="A-12"></div>
+        <div class="slot available" title="B-01"></div>
+        <div class="slot occupied" title="B-02"></div>
+        <div class="slot available" title="B-03"></div>
+      </div>
+      <div class="card-legend">
+        <span><i class="dot green"></i>Available</span>
+        <span><i class="dot red"></i>Occupied</span>
+        <span><i class="dot blue"></i>Your Slot</span>
+      </div>
+      <div class="card-cta">
+        <span class="cta-slot">Slot A-08 selected</span>
+        <button class="btn-confirm" onclick="window.location.href='pages/book.html'">Confirm →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Three steps to <em>zero parking stress</em></h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔍</div>
+        <h3>Find Your Mall</h3>
+        <p>Choose from 6 partner malls. See live slot availability updated every 30 seconds.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">📱</div>
+        <h3>Pick & Book</h3>
+        <p>Select your floor, slot type (regular/EV/accessible), and confirm with one tap.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">🚗</div>
+        <h3>Drive In</h3>
+        <p>Show your QR code at the boom barrier. Guided navigation leads you straight to your slot.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE AVAILABILITY TICKER -->
+<section class="ticker-section">
+  <div class="ticker-label">LIVE AVAILABILITY</div>
+  <div class="ticker-wrap">
+    <div class="ticker-inner" id="ticker">
+      <span class="tick tick-green">Express Avenue · B2 · 34 free</span>
+      <span class="tick tick-yellow">Phoenix MarketCity · F1 · 8 free</span>
+      <span class="tick tick-green">VR Chennai · Level 3 · 61 free</span>
+      <span class="tick tick-red">Ampa Skywalk · All · Full</span>
+      <span class="tick tick-green">Forum Vijaya · B1 · 22 free</span>
+      <span class="tick tick-green">Spencer Plaza · Roof · 47 free</span>
+      <span class="tick tick-green">Express Avenue · B2 · 34 free</span>
+      <span class="tick tick-yellow">Phoenix MarketCity · F1 · 8 free</span>
+      <span class="tick tick-green">VR Chennai · Level 3 · 61 free</span>
+      <span class="tick tick-red">Ampa Skywalk · All · Full</span>
+      <span class="tick tick-green">Forum Vijaya · B1 · 22 free</span>
+      <span class="tick tick-green">Spencer Plaza · Roof · 47 free</span>
+    </div>
+  </div>
+</section>
+
+<!-- MALL CARDS -->
+<section class="malls-section">
+  <div class="container">
+    <div class="section-label">Partner Malls</div>
+    <h2 class="section-title">Your city's best malls, <em>all in one app</em></h2>
+    <div class="malls-grid">
+
+      <div class="mall-card">
+        <div class="mall-thumb" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+          <span class="mall-initial">EA</span>
+          <div class="availability-badge green">847 free</div>
+        </div>
+        <div class="mall-info">
+          <h3>Express Avenue</h3>
+          <p>Royapettah, Chennai</p>
+          <div class="mall-meta">
+            <span>4 floors</span>
+            <span>·</span>
+            <span>640 slots</span>
+            <span>·</span>
+            <span class="ev">EV charging</span>
+          </div>
+          <a href="pages/book.html" class="btn-mall">Book Slot →</a>
+        </div>
+      </div>
+
+      <div class="mall-card">
+        <div class="mall-thumb" style="background: linear-gradient(135deg, #2d1b69, #11998e);">
+          <span class="mall-initial">PM</span>
+          <div class="availability-badge yellow">8 free</div>
+        </div>
+        <div class="mall-info">
+          <h3>Phoenix MarketCity</h3>
+          <p>Velachery, Chennai</p>
+          <div class="mall-meta">
+            <span>5 floors</span>
+            <span>·</span>
+            <span>900 slots</span>
+            <span>·</span>
+            <span class="ev">EV charging</span>
+          </div>
+          <a href="pages/book.html" class="btn-mall">Book Slot →</a>
+        </div>
+      </div>
+
+      <div class="mall-card">
+        <div class="mall-thumb" style="background: linear-gradient(135deg, #200122, #6f0000);">
+          <span class="mall-initial">VR</span>
+          <div class="availability-badge green">61 free</div>
+        </div>
+        <div class="mall-info">
+          <h3>VR Chennai</h3>
+          <p>Anna Nagar, Chennai</p>
+          <div class="mall-meta">
+            <span>3 floors</span>
+            <span>·</span>
+            <span>520 slots</span>
+            <span>·</span>
+            <span class="ev">EV charging</span>
+          </div>
+          <a href="pages/book.html" class="btn-mall">Book Slot →</a>
+        </div>
+      </div>
+
+      <div class="mall-card">
+        <div class="mall-thumb" style="background: linear-gradient(135deg, #0f2027, #2c5364);">
+          <span class="mall-initial">FV</span>
+          <div class="availability-badge green">22 free</div>
+        </div>
+        <div class="mall-info">
+          <h3>Forum Vijaya</h3>
+          <p>Vadapalani, Chennai</p>
+          <div class="mall-meta">
+            <span>3 floors</span>
+            <span>·</span>
+            <span>340 slots</span>
+            <span>·</span>
+            <span>Accessible</span>
+          </div>
+          <a href="pages/book.html" class="btn-mall">Book Slot →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-layout">
+      <div class="features-left">
+        <div class="section-label">Why ParkEase</div>
+        <h2 class="section-title">Built for Chennai's <em>real parking chaos</em></h2>
+        <p class="features-desc">We've been there — driving up 4 floors only to find it full. ParkEase was built to solve exactly that, with technology that actually works offline too.</p>
+        <a href="pages/about.html" class="btn-primary">Our Story →</a>
+      </div>
+      <div class="features-right">
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <h4>Real-time sensors</h4>
+            <p>IoT sensors on every slot. 30-second update cycle. No guessing.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📲</div>
+          <div>
+            <h4>QR Entry & Exit</h4>
+            <p>Boom barriers open automatically. Zero human contact at entry.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔋</div>
+          <div>
+            <h4>EV Charging Slots</h4>
+            <p>Book EV bays with 3.3 kW and 7.2 kW chargers included.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💳</div>
+          <div>
+            <h4>Pay-as-you-go</h4>
+            <p>UPI, card, wallet. Pay exactly what you use, nothing more.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📍</div>
+          <div>
+            <h4>In-mall Navigation</h4>
+            <p>AR-guided path from entrance to your booked slot on every floor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="container">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, <em>transparent rates</em></h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-type">Two-Wheeler</div>
+        <div class="price-val">₹20<span>/hr</span></div>
+        <ul>
+          <li>✓ Any mall</li>
+          <li>✓ Pre-book discount</li>
+          <li>✓ QR entry</li>
+        </ul>
+        <a href="pages/book.html" class="btn-price">Book Now</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-type">Four-Wheeler</div>
+        <div class="price-val">₹50<span>/hr</span></div>
+        <ul>
+          <li>✓ All slot types</li>
+          <li>✓ Pre-book discount</li>
+          <li>✓ QR entry + exit</li>
+          <li>✓ SMS reminders</li>
+        </ul>
+        <a href="pages/book.html" class="btn-price featured-btn">Book Now</a>
+      </div>
+      <div class="price-card">
+        <div class="price-type">EV Slot + Charging</div>
+        <div class="price-val">₹80<span>/hr</span></div>
+        <ul>
+          <li>✓ Charging included</li>
+          <li>✓ Wider bays</li>
+          <li>✓ Priority booking</li>
+        </ul>
+        <a href="pages/book.html" class="btn-price">Book Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-label">Reviews</div>
+    <h2 class="section-title">What Chennaikars <em>are saying</em></h2>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"Finally! I booked a slot at Phoenix before leaving home. Found it right away, paid via UPI. Perfect."</p>
+        <div class="reviewer">
+          <div class="avatar">RK</div>
+          <div>
+            <strong>Rohit K.</strong>
+            <span>Velachery</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"The EV charging slot booking is a game changer. No more waiting 45 mins for someone to leave."</p>
+        <div class="reviewer">
+          <div class="avatar">PS</div>
+          <div>
+            <strong>Priya S.</strong>
+            <span>Anna Nagar</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★☆</div>
+        <p>"Love the QR entry. In-mall navigation is a bit rough but the core parking booking is flawless."</p>
+        <div class="reviewer">
+          <div class="avatar">AM</div>
+          <div>
+            <strong>Arjun M.</strong>
+            <span>T. Nagar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Stop circling. <em>Start booking.</em></h2>
+    <p>Join 50,000+ Chennai drivers who never hunt for parking anymore.</p>
+    <div class="cta-actions">
+      <a href="pages/book.html" class="btn-primary">Book Your First Slot Free</a>
+      <a href="pages/parking.html" class="btn-ghost-white">See Live Map →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-p">P</span>arkEase</div>
+        <p>Smart parking for Chennai's malls. Real-time. Reliable. Ridiculously easy.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="Instagram">📸</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="pages/parking.html">Live Parking Map</a>
+        <a href="pages/book.html">Book a Slot</a>
+        <a href="pages/services.html">Services</a>
+      </div>
+      <div class="footer-col">
+        <h5>Malls</h5>
+        <a href="#">Express Avenue</a>
+        <a href="#">Phoenix MarketCity</a>
+        <a href="#">VR Chennai</a>
+        <a href="#">Forum Vijaya</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="pages/about.html">About Us</a>
+        <a href="pages/about.html#contact">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 ParkEase. Built with ❤️ for Chennai.</span>
+      <span>InAmigos Foundation Task 3 — AI Website Generation</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
